@@ -1,0 +1,10 @@
+listen_on: 0.0.0.0:*
+num_experts: 16
+expert_cls: ffn
+hidden_dim: 1024
+expert_pattern: expert.[0:4].[0:4]
+max_batch_size: 16384
+optimizer: adam
+no_dht: True
+initial_peers: "[]"
+increase_file_limit: True

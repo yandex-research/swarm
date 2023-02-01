@@ -1,0 +1,75 @@
+syntax = "proto3";
+import "auth.proto";
+
+// this protocol defines how nodes form a distributed hash table.
+
+service DHT {
+  // find out recipient's DHTID and possibly update its routing table
+  rpc rpc_ping(PingRequest) returns (PingResponse);
+
+  // request a node to store one or multiple data items (key - value - expiration)
+  rpc rpc_store(StoreRequest) returns (StoreResponse);
+
+  // for given keys, request values (if stored) or a list of peers that are likely to have them
+  rpc rpc_find(FindRequest) returns (FindResponse);
+}
+
+message NodeInfo {
+  // note: both node_id and port are optional: if specified, ask peer to add you to its routing table;
+  // if either node_id or port is absent, simply request recipient info (for client-only mode)
+  bytes node_id = 1;                   // sender's own node id serialized with DHTID.to_bytes()
+}
+
+message PingRequest {
+  RequestAuthInfo auth = 1;
+  NodeInfo peer = 2;                   // (optional) sender's own node info, same behavior as in DHT.rpc_ping
+  bool validate = 3;                   // set to True if sender wants to validate that he is accessible and synchronized
+}
+
+message PingResponse {
+  ResponseAuthInfo auth = 1;
+  NodeInfo peer = 2;                   // respondent's node id, for you to update routing table
+  double dht_time = 4;                 // recipient's local DHT time - used to soft-synchronize peers
+  bool available = 5;                  // if validate = True, this flag asserts that the sender is available for ping
+}
+
+message StoreRequest {
+  RequestAuthInfo auth = 1;
+  // three lists of the same length representing dht keys, dht values and expiration
+  repeated bytes keys = 2;             // keys in the form of DHTID.generate(raw_key).to_bytes()
+  repeated bytes subkeys = 3;          // serialized subkeys for DictionaryDHTValue type. None means no subkey
+  repeated bytes values = 4;           // serialized value for i-th key
+  repeated double expiration_time = 5; // expirations for i-th key (type = DHTExpiration)
+  repeated bool in_cache = 6;          // if in_cache[i], store i-th key in cache, else store normally
+  NodeInfo peer = 7;                   // (optional) sender's own node info, same behavior as in DHT.rpc_ping
+}
+
+message StoreResponse {
+  ResponseAuthInfo auth = 1;
+  repeated bool store_ok = 2;          // for every key, True means store accepted, False means store rejected/failed
+  NodeInfo peer = 3;                   // respondent's node id, for you to update routing table
+}
+
+message FindRequest {
+  RequestAuthInfo auth = 1;
+  repeated bytes keys = 2;             // a list of DHTID search keys encoded as bytes
+  NodeInfo peer = 3;                   // optional, same behavior as in DHT.ping
+}
+
+enum ResultType {NOT_FOUND = 0; FOUND_REGULAR = 1; FOUND_DICTIONARY = 2;}
+
+message FindResult {
+  ResultType type = 1;                 // NONE |      REGULAR     | DICTIONARY
+  bytes value = 2;                     // n/a  | serialized value | serialized DictionaryDHTValue with serialized fields
+  double expiration_time = 3;          // n/a  | expiration time  | DictionaryDHTValue.latest_expiration_time
+
+  // two aligned arrays: DHTIDs and PeerIDs for nearest peers (sorted by XOR distance)
+  repeated bytes nearest_node_ids = 4;  // DHTIDs of the nearest peers serialized with node_id.to_bytes()
+  repeated bytes nearest_peer_ids = 5;  // libp2p PeerIDs of the nearest peers
+}
+
+message FindResponse {
+  ResponseAuthInfo auth = 1;
+  repeated FindResult results = 2;       // for each item, return value/expiration (if found) and nearest peers
+  NodeInfo peer = 3;                   // respondent's node id, for you to update routing table
+}
