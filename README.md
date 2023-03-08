@@ -29,12 +29,10 @@ Feel free to ask any questions about this work [by email](mailto:mryabinin0@gmai
 # References
 
 ```
-@misc{ryabinin2023swarm,
-    title={SWARM Parallelism: Training Large Models Can Be Surprisingly Communication-Efficient},
-    author={Max Ryabinin and Tim Dettmers and Michael Diskin and Alexander Borzunov},
-    year={2023},
-    eprint={2301.11913},
-    archivePrefix={arXiv},
-    primaryClass={cs.DC}
+@article{ryabinin2023swarm,
+  title={SWARM Parallelism: Training Large Models Can Be Surprisingly Communication-Efficient},
+  author={Ryabinin, Max and Dettmers, Tim and Diskin, Michael and Borzunov, Alexander},
+  journal={arXiv preprint arXiv:2301.11913},
+  year={2023}
 }
 ```
