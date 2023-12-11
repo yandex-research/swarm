@@ -29,10 +29,18 @@ Feel free to ask any questions about this work [by email](mailto:mryabinin0@gmai
 # References
 
 ```
-@article{ryabinin2023swarm,
-  title={SWARM Parallelism: Training Large Models Can Be Surprisingly Communication-Efficient},
-  author={Ryabinin, Max and Dettmers, Tim and Diskin, Michael and Borzunov, Alexander},
-  journal={arXiv preprint arXiv:2301.11913},
-  year={2023}
+@inproceedings{ryabinin2023swarm,
+  title = 	 {{SWARM} Parallelism: Training Large Models Can Be Surprisingly Communication-Efficient},
+  author =       {Ryabinin, Max and Dettmers, Tim and Diskin, Michael and Borzunov, Alexander},
+  booktitle = 	 {Proceedings of the 40th International Conference on Machine Learning},
+  pages = 	 {29416--29440},
+  year = 	 {2023},
+  editor = 	 {Krause, Andreas and Brunskill, Emma and Cho, Kyunghyun and Engelhardt, Barbara and Sabato, Sivan and Scarlett, Jonathan},
+  volume = 	 {202},
+  series = 	 {Proceedings of Machine Learning Research},
+  month = 	 {23--29 Jul},
+  publisher =    {PMLR},
+  pdf = 	 {https://proceedings.mlr.press/v202/ryabinin23a/ryabinin23a.pdf},
+  url = 	 {https://proceedings.mlr.press/v202/ryabinin23a.html},
 }
 ```
